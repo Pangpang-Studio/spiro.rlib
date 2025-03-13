@@ -93,7 +93,31 @@ where
 pub struct SpiroCP {
     pub x: f64,
     pub y: f64,
-    pub ty: char,
+    pub ty: SpiroCpTy,
+}
+
+#[derive(Copy, Clone, Default, Debug)]
+#[repr(u8)]
+pub enum SpiroCpTy {
+    Corner = b'v',
+    G4 = b'o',
+    G2 = b'c',
+    /// Also known as "flat".
+    Left = b'[',
+    /// Also known as "curl".
+    Right = b']',
+    Anchor = b'a',
+    Handle = b'h',
+    #[default]
+    End = b'z',
+    Open = b'{',
+    EndOpen = b'}',
+}
+
+impl std::cmp::PartialEq<u8> for SpiroCpTy {
+    fn eq(&self, other: &u8) -> bool {
+        &(*self as u8) == other
+    }
 }
 
 /// C(2Rust-derived) implementation of third-order polynomial spirals.
@@ -113,7 +137,7 @@ pub struct SpiroCP {
 pub struct SpiroSegment {
     x: f64,
     y: f64,
-    ty: char,
+    ty: SpiroCpTy,
     bend_th: f64,
     ks: [f64; 4],
     seg_ch: f64,
@@ -128,7 +152,7 @@ pub fn setup_path(src: &[SpiroCP]) -> Vec<SpiroSegment> {
         return Vec::new();
     }
 
-    if (src[0]).ty == '{' {
+    if (src[0]).ty == b'{' {
         n -= 1;
     };
 
@@ -160,7 +184,7 @@ pub fn setup_path(src: &[SpiroCP]) -> Vec<SpiroSegment> {
     ilast = n - 1;
     i = 0;
     while i < n {
-        if (r[i].ty == '{') || (r[i].ty == '}') || (r[i].ty == 'v') {
+        if (r[i].ty == b'{') || (r[i].ty == b'}') || (r[i].ty == b'v') {
             r[i].bend_th = 0.0;
         } else {
             r[i].bend_th = mod2pi(r[i].seg_th - r[ilast].seg_th);
@@ -182,7 +206,7 @@ pub fn solve_spiro(s: &mut [SpiroSegment]) {
     if nmat == 0 {
         return;
     }
-    if s[0].ty != '{' && s[0].ty != 'v' {
+    if s[0].ty != b'{' && s[0].ty != b'v' {
         n_alloc *= 3
     }
     if n_alloc < 5 {
@@ -209,14 +233,14 @@ pub fn spiro_to_bpath<T, A>(s: &[SpiroSegment], n: usize, bc: &mut BezierContext
         return;
     }
     let mut i = 0;
-    let nsegs: usize = if s[(n - 1) as usize].ty == '}' { (n) - 1 } else { n };
+    let nsegs: usize = if s[(n - 1) as usize].ty == b'}' { (n) - 1 } else { n };
     while i < nsegs {
         let x0: f64 = s[i as usize].x;
         let y0: f64 = s[i as usize].y;
         let x1: f64 = s[(i + 1) as usize].x;
         let y1: f64 = s[(i + 1) as usize].y;
         if i == 0 {
-            bc.move_to(x0, y0, s[0 as usize].ty == '{');
+            bc.move_to(x0, y0, s[0 as usize].ty == b'{');
         }
         bc.mark_knot(i.try_into().unwrap());
         spiro_seg_to_bpath(s[i as usize].ks, x0, y0, x1, y1, bc, 0);
