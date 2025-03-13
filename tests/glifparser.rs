@@ -4,8 +4,11 @@
 mod data;
 
 use glifparser::outline::ToOutline as _;
+use snapbox::{file, Assert};
 
 use spiro::*;
+
+const TRYCMD: &str = "TRYCMD";
 
 #[test]
 fn test() {
@@ -15,8 +18,6 @@ fn test() {
     let outline: glifparser::Outline<()> = ctx.data.ops_path.to_outline();
     let mut glif = glifparser::Glif::<()>::new();
     glif.outline = Some(outline);
-    let expected_glif = include_str!("data/spiro.glif");
     let out_glif = glifparser::glif::write(&glif).unwrap();
-    eprintln!("{}", &out_glif);
-    assert_eq!(out_glif, expected_glif);
+    Assert::new().action_env(TRYCMD).eq(out_glif, file!["data/spiro.glif"]);
 }
