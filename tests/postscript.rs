@@ -1,22 +1,28 @@
 #[macro_use]
 mod data;
 
-use spiro::*;
 use std::str;
+
+use snapbox::{file, Assert};
+
+use spiro::*;
+
+const TRYCMD: &str = "TRYCMD";
 
 #[test]
 fn test() {
     let path = test_data!();
 
-    let mut buffer = ['\0' as u8; 10240];
+    let mut buffer = Vec::<u8>::new();
     {
-        let mut writer = std::io::BufWriter::new(buffer.as_mut());
+        let mut writer = std::io::BufWriter::new(&mut buffer);
         let mut boxed_writer = Box::new(&mut writer);
         let mut ctx = bezctx_ps::PostScriptBezierContext::new(&mut boxed_writer);
         ctx.run_spiro(&path);
     }
 
     let bufstr: &str = str::from_utf8(&buffer).unwrap();
-    eprintln!("{}", bufstr);
-    assert_eq!(bufstr.trim_matches('\0'), include_str!("data/spiro.ps"));
+    Assert::new()
+        .action_env(TRYCMD)
+        .eq(bufstr.trim_matches('\0'), file!["data/spiro.ps"]);
 }
