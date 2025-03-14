@@ -12,7 +12,7 @@ This is Raph Levien's C implementation of Spiro in pure Rust, transpiled by C2Ru
 
 ## Usage example
 
-```rust
+```rust,ignore
 use spiro::{BezCtxGpPenOpsData, BezierContext};
 use glifparser::{Glif, outline::ToOutline as _};
 
