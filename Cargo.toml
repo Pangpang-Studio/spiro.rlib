@@ -17,7 +17,7 @@ repository = "https://github.com/MFEK/spiro.rlib"
 
 [dependencies]
 log = { version = "0.4", optional = true }
-glifparser = { version = "1.2", optional = true, default-features = false }
+glifparser = { version = "2.0", optional = true, default-features = false }
 
 [dev-dependencies]
 snapbox = "0.6.21"
