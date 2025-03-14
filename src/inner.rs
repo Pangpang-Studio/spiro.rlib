@@ -47,7 +47,7 @@ pub fn integrate_spiro(ks: [f64; 4], xy: &mut [f64; 2]) {
     let th4: f64 = 1.0 / 24. * ks[3];
     let mut x: f64 = 0.;
     let mut y: f64 = 0.;
-    let ds: f64 = 1.0 / 4 as f64;
+    let ds: f64 = 1.0 / 4_f64;
     let ds2: f64 = ds * ds;
     let ds3: f64 = ds2 * ds;
     let k0: f64 = ks[0] * ds;
@@ -59,16 +59,12 @@ pub fn integrate_spiro(ks: [f64; 4], xy: &mut [f64; 2]) {
     while i < 4 {
         let mut u;
         let mut v;
-        let km0;
-        let km1;
-        let km2;
-        let km3;
 
-        km0 = ((1.0 / 6. * k3 * s + 0.5 * k2) * s + k1) * s + k0;
-        km1 = ((0.5 * k3 * s + k2) * s + k1) * ds;
-        km2 = (k3 * s + k2) * ds2;
+        let km0 = ((1.0 / 6. * k3 * s + 0.5 * k2) * s + k1) * s + k0;
+        let km1 = ((0.5 * k3 * s + k2) * s + k1) * ds;
+        let km2 = (k3 * s + k2) * ds2;
 
-        km3 = k3 * ds3;
+        let km3 = k3 * ds3;
         let t1_1: f64 = km0;
         let t1_2: f64 = 0.5 * km1;
         let t1_3: f64 = 1.0 / 6. * km2;
@@ -140,42 +136,30 @@ pub fn integrate_spiro(ks: [f64; 4], xy: &mut [f64; 2]) {
 /// > at the two endpoints of the curve.
 pub fn compute_ends(ks: [f64; 4], ends: &mut [[f64; 4]; 2], seg_ch: f64) -> f64 {
     let mut xy: [f64; 2] = [0.; 2];
-    let ch;
-    let th;
-    let l;
-    let l2;
-    let l3;
-    let th_even;
-    let th_odd;
-    let k0_even;
-    let k0_odd;
-    let k1_even;
-    let k1_odd;
-    let k2_even;
-    let k2_odd;
+
     integrate_spiro(ks, &mut xy);
-    ch = xy[0].hypot(xy[1]);
-    th = xy[1].atan2(xy[0]);
-    l = ch / seg_ch;
-    th_even = 0.5 * ks[0] + 1.0 / 48. * ks[2];
-    th_odd = 0.125 * ks[1] + 1.0 / 384. * ks[3] - th;
+    let ch = xy[0].hypot(xy[1]);
+    let th = xy[1].atan2(xy[0]);
+    let l = ch / seg_ch;
+    let th_even = 0.5 * ks[0] + 1.0 / 48. * ks[2];
+    let th_odd = 0.125 * ks[1] + 1.0 / 384. * ks[3] - th;
     (ends[0])[0] = th_even - th_odd;
     (ends[1])[0] = th_even + th_odd;
-    k0_even = l * (ks[0] + 0.125 * ks[2]);
-    k0_odd = l * (0.5 * ks[1] + 1.0 / 48. * ks[3]);
+    let k0_even = l * (ks[0] + 0.125 * ks[2]);
+    let k0_odd = l * (0.5 * ks[1] + 1.0 / 48. * ks[3]);
     (ends[0])[1] = k0_even - k0_odd;
     (ends[1])[1] = k0_even + k0_odd;
-    l2 = l * l;
-    k1_even = l2 * (ks[1] + 0.125 * ks[3]);
-    k1_odd = l2 * 0.5 * ks[2];
+    let l2 = l * l;
+    let k1_even = l2 * (ks[1] + 0.125 * ks[3]);
+    let k1_odd = l2 * 0.5 * ks[2];
     (ends[0])[2] = k1_even - k1_odd;
     (ends[1])[2] = k1_even + k1_odd;
-    l3 = l2 * l;
-    k2_even = l3 * ks[2];
-    k2_odd = l3 * 0.5 * ks[3];
+    let l3 = l2 * l;
+    let k2_even = l3 * ks[2];
+    let k2_odd = l3 * 0.5 * ks[3];
     (ends[0])[3] = k2_even - k2_odd;
     (ends[1])[3] = k2_even + k2_odd;
-    return l;
+    l
 }
 
 /// Computes Spiro’s Jacobian matrix (matrix of all the first-order partial derivatives of a
@@ -225,7 +209,7 @@ use std::f64::consts::PI;
 /// mod2pi(θ) gives the value of θ within the range -π ≤ θ < π.
 pub fn mod2pi(th: f64) -> f64 {
     let u = th / (2. * PI);
-    return 2. * PI * (u - (u + 0.5).floor());
+    2. * PI * (u - (u + 0.5).floor())
 }
 
 /// bandec11 decomposes an 11x11 matrix into lower and upper triangular matrices using Gaussian
@@ -277,36 +261,36 @@ pub fn bandec11(m: &mut [BandMath], perm: &mut [usize], n: usize) {
     while i < 5 {
         j = 0;
         while j < i + 6 {
-            m[i as usize].a[j as usize] = m[i as usize].a[(j + 5 - i) as usize];
+            m[i].a[j] = m[i].a[j + 5 - i];
             j += 1
         }
         while j < 11 {
-            m[i as usize].a[j as usize] = 0.0;
+            m[i].a[j] = 0.0;
             j += 1
         }
         i += 1
     }
     while k < n {
         let mut pivot: usize = k;
-        let mut pivot_val: f64 = m[k as usize].a[0];
+        let mut pivot_val: f64 = m[k].a[0];
         if l < n {
             l += 1
         }
         j = k + 1;
         while j < l {
-            if m[j as usize].a[0].abs() > pivot_val.abs() {
-                pivot_val = m[j as usize].a[0];
+            if m[j].a[0].abs() > pivot_val.abs() {
+                pivot_val = m[j].a[0];
                 pivot = j;
             }
             j += 1
         }
-        perm[k as usize] = pivot;
+        perm[k] = pivot;
         if pivot != k {
             j = 0;
             while j < 11 {
-                let tmp: f64 = m[k as usize].a[j as usize];
-                m[k as usize].a[j as usize] = m[pivot as usize].a[j as usize];
-                m[pivot as usize].a[j as usize] = tmp;
+                let tmp: f64 = m[k].a[j];
+                m[k].a[j] = m[pivot].a[j];
+                m[pivot].a[j] = tmp;
                 j += 1
             }
         }
@@ -316,14 +300,14 @@ pub fn bandec11(m: &mut [BandMath], perm: &mut [usize], n: usize) {
         let pivot_scale = 1.0 / pivot_val;
         i = k + 1;
         while i < l {
-            let x: f64 = m[i as usize].a[0] * pivot_scale;
-            m[k as usize].al[(i - k - 1) as usize] = x;
+            let x: f64 = m[i].a[0] * pivot_scale;
+            m[k].al[i - k - 1] = x;
             j = 1;
             while j < 11 {
-                m[i as usize].a[(j - 1) as usize] = m[i as usize].a[j as usize] - x * m[k as usize].a[j as usize];
+                m[i].a[j - 1] = m[i].a[j] - x * m[k].a[j];
                 j += 1
             }
-            m[i as usize].a[10] = 0.0;
+            m[i].a[10] = 0.0;
             i += 1
         }
         k += 1
@@ -344,18 +328,17 @@ pub fn banbks11(m: &[BandMath], perm: &[usize], v: &mut [f64], n: usize) {
     let mut l: usize = 5;
     /* forward substitution */
     while k < n {
-        i = perm[k as usize];
+        i = perm[k];
         if i != k {
-            let tmp = v[k as usize];
-            v[k as usize] = v[i as usize];
-            v[i as usize] = tmp;
+            let i = i;
+            v.swap(k, i);
         }
         if l < n {
             l += 1
         }
         i = k + 1;
         while i < l {
-            v[i as usize] -= m[k as usize].al[(i - k - 1) as usize] * v[k as usize];
+            v[i] -= m[k].al[i - k - 1] * v[k];
             i += 1
         }
         k += 1
@@ -364,13 +347,13 @@ pub fn banbks11(m: &[BandMath], perm: &[usize], v: &mut [f64], n: usize) {
     l = 1;
     i = n - 1;
     loop {
-        let mut x: f64 = v[i as usize];
+        let mut x: f64 = v[i];
         k = 1;
         while k < l {
-            x -= m[i as usize].a[k as usize] * v[(k + i) as usize];
+            x -= m[i].a[k] * v[k + i];
             k += 1
         }
-        v[i as usize] = x / m[i as usize].a[0];
+        v[i] = x / m[i].a[0];
         if l < 11 {
             l += 1
         }
@@ -388,14 +371,14 @@ pub fn banbks11(m: &[BandMath], perm: &[usize], v: &mut [f64], n: usize) {
 /// - v/{… = corner = 1
 pub fn compute_jinc(ty0: SpiroCpTy, ty1: SpiroCpTy) -> usize {
     if ty0 == b'o' || ty1 == b'o' || ty0 == b']' || ty1 == b'[' {
-        return 4;
+        4
     } else if ty0 == b'c' && ty1 == b'c' {
         return 2;
     } else if (ty0 == b'{' || ty0 == b'v' || ty0 == b'[') && ty1 == b'c' || ty0 == b'c' && (ty1 == b'}' || ty1 == b'v' || ty1 == b']') {
         return 1;
     } else {
         return 0;
-    };
+    }
 }
 
 /// Get total jump increment for a [`&[SpiroSegment]`].
@@ -412,9 +395,10 @@ pub fn count_vec(s: &[SpiroSegment]) -> usize {
 
 /// This function updates a system of linear equations represented by a matrix and a vector. It
 /// does this by adding a new equation to the system in the form
-/// `x + y * derivs[0] * m[jj][j] + y * derivs[1] * m[jj][j + 1] + ... = v[jj]`, where m is the 
+/// `x + y * derivs[0] * m[jj][j] + y * derivs[1] * m[jj][j + 1] + ... = v[jj]`, where m is the
 /// matrix, v is the vector, derivs is a slice of floating point values, x and y are additional
 /// floating point values, jj is an index, and j is an offset.
+#[allow(clippy::too_many_arguments)]
 pub fn add_mat_line(
     m: &mut [BandMath],
     v: &mut [f64],
@@ -429,9 +413,9 @@ pub fn add_mat_line(
     let mut k: usize = 0;
     if let (Some(jj),) = (jj,) {
         let joff: usize = (j + 5 - jj + nmat) % nmat;
-        v[jj as usize] += x;
+        v[jj] += x;
         while k <= jinc {
-            m[jj as usize].a[(joff + k) as usize] += y * derivs[k as usize];
+            m[jj].a[joff + k] += y * derivs[k];
             k += 1
         }
     };
@@ -470,15 +454,15 @@ pub fn spiro_iter(s: &mut [SpiroSegment], m: &mut [BandMath], perm: &mut [usize]
     let mut norm: f64;
     let n_invert: usize;
     while i < nmat {
-        v[i as usize] = 0.0;
+        v[i] = 0.0;
         j = 0;
         while j < 11 {
-            m[i as usize].a[j as usize] = 0.0;
+            m[i].a[j] = 0.0;
             j += 1
         }
         j = 0;
         while j < 5 {
-            m[i as usize].al[j as usize] = 0.0;
+            m[i].al[j] = 0.0;
             j += 1
         }
         i += 1
@@ -493,10 +477,10 @@ pub fn spiro_iter(s: &mut [SpiroSegment], m: &mut [BandMath], perm: &mut [usize]
     }
     i = 0;
     while i < s.len() - 1 {
-        let ty0 = s[i as usize].ty;
-        let ty1 = s[i as usize + 1].ty;
+        let ty0 = s[i].ty;
+        let ty1 = s[i + 1].ty;
         let jinc: usize = compute_jinc(ty0, ty1);
-        let th: f64 = s[i as usize].bend_th;
+        let th: f64 = s[i].bend_th;
         let mut ends: [[f64; 4]; 2] = [[0.; 4]; 2];
         let mut derivs: [[[f64; 4]; 2]; 4] = [[[0.; 4]; 2]; 4];
         let mut jthl: Option<usize> = None;
@@ -507,46 +491,46 @@ pub fn spiro_iter(s: &mut [SpiroSegment], m: &mut [BandMath], perm: &mut [usize]
         let mut jk0r: Option<usize> = None;
         let mut jk1r: Option<usize> = None;
         let mut jk2r: Option<usize> = None;
-        compute_pderivs(&mut s[i as usize], &mut ends, &mut derivs, jinc);
+        compute_pderivs(&s[i], &mut ends, &mut derivs, jinc);
         /* constraints crossing left */
         if ty0 == b'o' || ty0 == b'c' || ty0 == b'[' || ty0 == b']' {
             let fresh0 = jj;
-            jj = jj + 1;
+            jj += 1;
             jthl = Some(fresh0);
             jj %= nmat;
             let fresh1 = jj;
-            jj = jj + 1;
+            jj += 1;
             jk0l = Some(fresh1);
         }
         if ty0 == b'o' {
             jj %= nmat;
             let fresh2 = jj;
-            jj = jj + 1;
+            jj += 1;
             jk1l = Some(fresh2);
             let fresh3 = jj;
-            jj = jj + 1;
+            jj += 1;
             jk2l = Some(fresh3);
         }
         /* constraints on left */
         if (ty0 == b'[' || ty0 == b'v' || ty0 == b'{' || ty0 == b'c') && jinc == 4 {
             if ty0 != b'c' {
                 let fresh4 = jj;
-                jj = jj + 1;
+                jj += 1;
                 jk1l = Some(fresh4);
             }
             let fresh5 = jj;
-            jj = jj + 1;
+            jj += 1;
             jk2l = Some(fresh5);
         }
         /* constraints on right */
         if (ty1 == b']' || ty1 == b'v' || ty1 == b'}' || ty1 == b'c') && jinc == 4 {
             if ty1 != b'c' {
                 let fresh6 = jj;
-                jj = jj + 1;
+                jj += 1;
                 jk1r = Some(fresh6);
             }
             let fresh7 = jj;
-            jj = jj + 1;
+            jj += 1;
             jk2r = Some(fresh7);
         }
         /* constraints crossing right */
@@ -572,11 +556,10 @@ pub fn spiro_iter(s: &mut [SpiroSegment], m: &mut [BandMath], perm: &mut [usize]
         i += 1
     }
     if cyclic {
-        let u_nmat: usize = nmat.try_into().unwrap();
-        m.copy_within(..u_nmat, u_nmat);
-        m.copy_within(..u_nmat, 2 * u_nmat);
-        v.copy_within(..u_nmat, u_nmat);
-        v.copy_within(..u_nmat, 2 * u_nmat);
+        m.copy_within(..nmat, nmat);
+        m.copy_within(..nmat, 2 * nmat);
+        v.copy_within(..nmat, nmat);
+        v.copy_within(..nmat, 2 * nmat);
         n_invert = 3 * nmat;
         j = nmat
     } else {
@@ -588,21 +571,21 @@ pub fn spiro_iter(s: &mut [SpiroSegment], m: &mut [BandMath], perm: &mut [usize]
     norm = 0.0;
     i = 0;
     while i < s.len() - 1 {
-        let ty0_0 = s[i as usize].ty;
-        let ty1_0 = s[(i + 1) as usize].ty;
+        let ty0_0 = s[i].ty;
+        let ty1_0 = s[i + 1].ty;
         let jinc_0: usize = compute_jinc(ty0_0, ty1_0);
         let mut k: usize = 0;
         while k < jinc_0 {
             let fresh8 = j;
-            j = j + 1;
-            let dk: f64 = v[fresh8 as usize];
-            s[i as usize].ks[k as usize] += dk;
+            j += 1;
+            let dk: f64 = v[fresh8];
+            s[i].ks[k] += dk;
             norm += dk * dk;
             k += 1
         }
         i += 1
     }
-    return norm;
+    norm
 }
 
 /// Single Spiro segment to Bézier path.
@@ -614,10 +597,7 @@ pub fn spiro_seg_to_bpath<T, A>(ks: [f64; 4], x0: f64, y0: f64, x1: f64, y1: f64
         let seg_ch: f64 = (x1 - x0).hypot(y1 - y0);
         let seg_th: f64 = (y1 - y0).atan2(x1 - x0);
         let mut xy: [f64; 2] = [0.; 2];
-        let ch: f64;
-        let th: f64;
-        let scale: f64;
-        let rot: f64;
+
         let th_even: f64;
         let th_odd: f64;
         let ul: f64;
@@ -625,10 +605,10 @@ pub fn spiro_seg_to_bpath<T, A>(ks: [f64; 4], x0: f64, y0: f64, x1: f64, y1: f64
         let ur: f64;
         let vr: f64;
         integrate_spiro(ks, &mut xy);
-        ch = xy[0].hypot(xy[1]);
-        th = xy[1].atan2(xy[0]);
-        scale = seg_ch / ch;
-        rot = seg_th - th;
+        let ch: f64 = xy[0].hypot(xy[1]);
+        let th: f64 = xy[1].atan2(xy[0]);
+        let scale: f64 = seg_ch / ch;
+        let rot: f64 = seg_th - th;
         if depth > 5 || bend < 1.0 {
             th_even = 1.0 / 384. * ks[3] + 1.0 / 8. * ks[1] + rot;
             th_odd = 1.0 / 48. * ks[2] + 0.5 * ks[0];
@@ -640,22 +620,19 @@ pub fn spiro_seg_to_bpath<T, A>(ks: [f64; 4], x0: f64, y0: f64, x1: f64, y1: f64
         } else {
             /* subdivide */
             let mut ksub: [f64; 4] = [0.; 4];
-            let thsub: f64;
+
             let mut xysub: [f64; 2] = [0.; 2];
-            let xmid: f64;
-            let ymid: f64;
-            let cth: f64;
-            let sth: f64;
+
             ksub[0] = 0.5 * ks[0] - 0.125 * ks[1] + 1.0 / 64. * ks[2] - 1.0 / 768. * ks[3];
             ksub[1] = 0.25 * ks[1] - 1.0 / 16. * ks[2] + 1.0 / 128. * ks[3];
             ksub[2] = 0.125 * ks[2] - 1.0 / 32. * ks[3];
             ksub[3] = 1.0 / 16. * ks[3];
-            thsub = rot - 0.25 * ks[0] + 1.0 / 32. * ks[1] - 1.0 / 384. * ks[2] + 1.0 / 6144. * ks[3];
-            cth = 0.5 * scale * (thsub).cos();
-            sth = 0.5 * scale * (thsub).sin();
+            let thsub: f64 = rot - 0.25 * ks[0] + 1.0 / 32. * ks[1] - 1.0 / 384. * ks[2] + 1.0 / 6144. * ks[3];
+            let cth: f64 = 0.5 * scale * (thsub).cos();
+            let sth: f64 = 0.5 * scale * (thsub).sin();
             integrate_spiro(ksub, &mut xysub);
-            xmid = x0 + cth * xysub[0] - sth * xysub[1];
-            ymid = y0 + cth * xysub[1] + sth * xysub[0];
+            let xmid: f64 = x0 + cth * xysub[0] - sth * xysub[1];
+            let ymid: f64 = y0 + cth * xysub[1] + sth * xysub[0];
             spiro_seg_to_bpath(ksub, x0, y0, xmid, ymid, bc, depth + 1);
             ksub[0] += 0.25 * ks[1] + 1.0 / 384. * ks[3];
             ksub[1] += 0.125 * ks[2];
@@ -669,10 +646,10 @@ pub fn spiro_seg_to_bpath<T, A>(ks: [f64; 4], x0: f64, y0: f64, x1: f64, y1: f64
 pub fn get_knot_theta(s: &[SpiroSegment], i: usize) -> f64 {
     let mut ends: [[f64; 4]; 2] = [[0.; 4]; 2];
     if i == 0 {
-        compute_ends(s[i as usize].ks, &mut ends, s[i].seg_ch);
-        return s[i].seg_th - ends[0][0];
+        compute_ends(s[i].ks, &mut ends, s[i].seg_ch);
+        s[i].seg_th - ends[0][0]
     } else {
         compute_ends(s[i - 1].ks, &mut ends, s[i - 1].seg_ch);
-        return s[i - 1].seg_th + ends[1][0];
-    };
+        s[i - 1].seg_th + ends[1][0]
+    }
 }
