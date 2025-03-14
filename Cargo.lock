@@ -119,6 +119,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "dyn-clone"
+version = "1.0.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1c7a8fb8a9fbf66c1f703fe16184d10ca0ee9d23be5b4436400408ba54a95005"
+
+[[package]]
 name = "either"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -135,18 +141,20 @@ dependencies = [
 
 [[package]]
 name = "glifparser"
-version = "1.2.8"
+version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d01cb960fd260b0eaf3528a74fd8571288d24799d961dabaaf09f14e5773c51"
+checksum = "b329a90dfaa08febb4696bc9c1a96f7b44e94dd53d5b76d7100b6c905a7461ac"
 dependencies = [
  "derivative",
  "derive_more",
+ "dyn-clone",
  "float-cmp",
  "integer_or_float",
  "itertools",
  "kurbo",
  "log",
  "plist",
+ "spline",
  "trees",
  "xmltree",
 ]
@@ -175,9 +183,9 @@ checksum = "da2d6f23ffea9d7e76c53eee25dfb67bcd8fde7f1198b0855350698c9f07c780"
 
 [[package]]
 name = "integer_or_float"
-version = "0.1.5-1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e4c938d51818e629bbddf8c62cbdab9d83d91f80a33ea9b9edb92214af4c73dc"
+checksum = "edf9d3b9fde0fc18066e6ba434e0b05863f7e7cccdecdae0f8d68c34089f5056"
 dependencies = [
  "autocfg",
  "cargo-emit",
@@ -185,6 +193,8 @@ dependencies = [
  "derive_more",
  "float-cmp",
  "indoc",
+ "ryu",
+ "serde",
 ]
 
 [[package]]
@@ -210,9 +220,9 @@ checksum = "fad582f4b9e86b6caa621cabeb0963332d92eea04729ab12892c2533951e6440"
 
 [[package]]
 name = "kurbo"
-version = "0.9.0"
+version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e119590a03caff1f7a582e8ee8c2164ddcc975791701188132fd1d1b518d3871"
+checksum = "bd85a5776cd9500c2e2059c8c76c3b01528566b7fcbaf8098b55a33fc298849b"
 dependencies = [
  "arrayvec",
 ]
@@ -298,6 +308,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "ryu"
+version = "1.0.20"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "28d3b2b1366ec20994f1fd18c3c594f05c5dd4bc44d8bb0c1c632c8d6829481f"
+
+[[package]]
 name = "safemem"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -314,6 +330,20 @@ name = "serde"
 version = "1.0.152"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bb7d1f0d3021d347a83e556fc4683dea2ea09d87bccdf88ff5c12545d89d5efb"
+dependencies = [
+ "serde_derive",
+]
+
+[[package]]
+name = "serde_derive"
+version = "1.0.152"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "af487d118eecd09402d70a5d72551860e788df87b464af30e5ea6a38c75c541e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "similar"
@@ -351,6 +381,12 @@ dependencies = [
  "log",
  "snapbox",
 ]
+
+[[package]]
+name = "spline"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c845fbdc07cb9555a94806496be14d51dcda6d3bf6894d92af2c3a93bebc2c5"
 
 [[package]]
 name = "syn"
