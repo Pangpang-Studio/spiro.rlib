@@ -1,7 +1,5 @@
 #![doc = include_str!("../README.md")]
 
-use std::convert::TryInto as _;
-
 pub mod inner;
 use inner::*;
 
@@ -64,7 +62,7 @@ impl<T, A> BezierContext<T, A> {
         let mut segs = setup_path(path);
         solve_spiro(&mut segs);
         self.start();
-        spiro_to_bpath(&mut segs, path.len(), self);
+        spiro_to_bpath(&segs, path.len(), self);
         self.end();
         &mut self.data
     }
@@ -223,8 +221,6 @@ pub fn solve_spiro(s: &mut [SpiroSegment]) {
             break;
         }
     }
-
-    return;
 }
 
 /// Convert Spiro segments to cubic Bézier splines.
@@ -233,17 +229,17 @@ pub fn spiro_to_bpath<T, A>(s: &[SpiroSegment], n: usize, bc: &mut BezierContext
         return;
     }
     let mut i = 0;
-    let nsegs: usize = if s[(n - 1) as usize].ty == b'}' { (n) - 1 } else { n };
+    let nsegs: usize = if s[n - 1].ty == b'}' { (n) - 1 } else { n };
     while i < nsegs {
-        let x0: f64 = s[i as usize].x;
-        let y0: f64 = s[i as usize].y;
-        let x1: f64 = s[(i + 1) as usize].x;
-        let y1: f64 = s[(i + 1) as usize].y;
+        let x0: f64 = s[i].x;
+        let y0: f64 = s[i].y;
+        let x1: f64 = s[i + 1].x;
+        let y1: f64 = s[i + 1].y;
         if i == 0 {
-            bc.move_to(x0, y0, s[0 as usize].ty == b'{');
+            bc.move_to(x0, y0, s[0_usize].ty == b'{');
         }
-        bc.mark_knot(i.try_into().unwrap());
-        spiro_seg_to_bpath(s[i as usize].ks, x0, y0, x1, y1, bc, 0);
+        bc.mark_knot(i);
+        spiro_seg_to_bpath(s[i].ks, x0, y0, x1, y1, bc, 0);
         i += 1
     }
 }
@@ -255,7 +251,7 @@ pub fn run_spiro(path: &mut [SpiroCP]) -> Vec<Operation> {
     let mut segs = setup_path(path);
     ctx.start();
     solve_spiro(&mut segs);
-    spiro_to_bpath(&mut segs, path_len, &mut ctx);
+    spiro_to_bpath(&segs, path_len, &mut ctx);
     ctx.end();
     ctx.data
 }
