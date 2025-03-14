@@ -3,7 +3,7 @@ mod data;
 
 use std::str;
 
-use snapbox::{file, Assert};
+use snapbox::{Assert, file};
 
 use spiro::*;
 

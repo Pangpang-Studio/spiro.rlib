@@ -7,7 +7,7 @@ authors = [
   "Raph Levien <raph.levien@gmail.com>",
   "MFEK Authors",
 ]
-edition = "2021"
+edition = "2024"
 license = "Apache-2.0"
 keywords = ["spiro", "curve-conversion", "c2rust"]
 description = "Raph Levien's C implementation of Spiro in pure Rust, transpiled by C2Rust and then heavily edited"

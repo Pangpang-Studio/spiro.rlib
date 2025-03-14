@@ -4,7 +4,7 @@
 mod data;
 
 use glifparser::outline::ToOutline as _;
-use snapbox::{file, Assert};
+use snapbox::{Assert, file};
 
 use spiro::*;
 

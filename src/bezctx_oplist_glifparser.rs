@@ -7,8 +7,8 @@ use glifparser::outline::SplitPenOperations;
 use glifparser::outline::{PenOperations, PenOperationsContour, PenOperationsPath};
 use glifparser::point::{GlifPoint, PointType as GpPointType};
 
-use crate::bezctx_oplist::trace;
 use crate::BezierContext;
+use crate::bezctx_oplist::trace;
 
 /// Data built up by this [`BezierContext`].
 #[derive(Clone, Debug, Default, PartialEq)]
