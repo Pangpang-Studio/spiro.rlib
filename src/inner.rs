@@ -220,9 +220,10 @@ pub fn compute_pderivs(s: &SpiroSegment, ends: &mut [[f64; 4]; 2], derivs: &mut 
 
 use std::f64::consts::PI;
 /// θ mod 2π
-/// mod2pi(θ) gives the value of θ within the range -π < θ ≤ π.
+/// mod2pi(θ) gives the value of θ within the range -π ≤ θ < π.
 pub fn mod2pi(th: f64) -> f64 {
-    return th.rem_euclid(2. * PI);
+    let u = th / (2. * PI);
+    return 2. * PI * (u - (u + 0.5).floor());
 }
 
 /// bandec11 decomposes an 11x11 matrix into lower and upper triangular matrices using Gaussian
