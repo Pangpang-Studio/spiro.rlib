@@ -4,11 +4,11 @@ This is Raph Levien's C implementation of Spiro in pure Rust, transpiled by C2Ru
 
 ## Features
 
-* Full support for all Spiro point types.
-* No more unsafe code as of v1.0.0 (thanks Seth).
-* Optional [`glifparser`](https://github.com/MFEK/glifparser.rlib) support, through which (`ToKurbo` on an `Outline` convertible from a `PenOperationsPath`) one can also get Raph Levien's [`kurbo`](https://docs.rs/kurbo) working.
-  * This provides `.glif` output. See § «Usage example».
-* Easy PostScript output context.
+- Full support for all Spiro point types.
+- No more unsafe code as of v1.0.0 (thanks Seth).
+- Optional [`glifparser`](https://github.com/MFEK/glifparser.rlib) support, through which (`ToKurbo` on an `Outline` convertible from a `PenOperationsPath`) one can also get Raph Levien's [`kurbo`](https://docs.rs/kurbo) working.
+  - This provides `.glif` output. See § «Usage example».
+- Easy PostScript output context.
 
 ## Usage example
 
@@ -25,6 +25,7 @@ eprintln!("{}", glifparser::glif::write(&glif).unwrap());
 ```
 
 ## License (this edit of C2Rust output)
+
 ```text
 Copyright (C) 2020–2022 Fredrick R. Brennan, Seth Erfurt and MFEK Authors
 Copyright (C) 2007 Raph Levien
@@ -42,7 +43,8 @@ specific language governing permissions and limitations under the License.
 ```
 
 ## License (original C code)
-``text
+
+```text
 Copyright (C) 2007 Raph Levien
 
 Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
