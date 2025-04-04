@@ -87,14 +87,14 @@ where
 }
 
 /// A Spiro control point.
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub struct SpiroCP {
     pub x: f64,
     pub y: f64,
     pub ty: SpiroCpTy,
 }
 
-#[derive(Copy, Clone, Default, Debug)]
+#[derive(Copy, Clone, Default, PartialEq, Eq, Debug)]
 #[repr(u8)]
 pub enum SpiroCpTy {
     Corner = b'v',
