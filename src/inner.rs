@@ -179,28 +179,18 @@ pub fn compute_pderivs(s: &SpiroSegment, ends: &mut [[f64; 4]; 2], derivs: &mut 
     let delta: f64 = 1.0 / recip_d;
     let mut try_ks: [f64; 4] = [0.; 4];
     let mut try_ends: [[f64; 4]; 2] = [[0.; 4]; 2];
-    let mut i: usize = 0;
-    let mut j;
-    let mut k;
     compute_ends(s.ks, ends, s.seg_ch);
-    while i < jinc + 1 {
-        j = 0;
-        while j < 4 {
+    for i in 0..jinc {
+        for j in 0..4 {
             try_ks[j] = s.ks[j];
-            j += 1
         }
         try_ks[i] += delta;
         compute_ends(try_ks, &mut try_ends, s.seg_ch);
-        k = 0;
-        while k < 2 {
-            j = 0;
-            while j < 4 {
-                (derivs[j])[k][i] = recip_d * (try_ends[k][j] - (ends[k])[j]);
-                j += 1
+        for k in 0..2 {
+            for j in 0..4 {
+                derivs[j][k][i] = recip_d * (try_ends[k][j] - ends[k][j]);
             }
-            k += 1
         }
-        i += 1
     }
 }
 
@@ -419,7 +409,7 @@ pub fn add_mat_line(
         7.. => (nmat - jj + j + 5) % nmat,
     };
     v[jj] += x;
-    for k in 0..=jinc {
+    for k in 0..jinc {
         m[jj].a[joff + k] += y * derivs[k];
     }
 }
