@@ -410,15 +410,18 @@ pub fn add_mat_line(
     jinc: usize,
     nmat: usize,
 ) {
-    let mut k: usize = 0;
-    if let (Some(jj),) = (jj,) {
-        let joff: usize = (j + 5 - jj + nmat) % nmat;
-        v[jj] += x;
-        while k <= jinc {
-            m[jj].a[joff + k] += y * derivs[k];
-            k += 1
-        }
+    let Some(mut jj) = jj else { return };
+    jj %= nmat;
+    // At this point we know that `0 <= jj < nmat`, which is enough for us to avoid overflows.
+    let joff = match nmat {
+        ..=5 => j + 5 - jj,
+        6 => 2 + (nmat - jj + j + 3) % nmat,
+        7.. => (nmat - jj + j + 5) % nmat,
     };
+    v[jj] += x;
+    for k in 0..=jinc {
+        m[jj].a[joff + k] += y * derivs[k];
+    }
 }
 
 /// Computes the outer loop of the Newton iteration
