@@ -107,9 +107,12 @@ pub enum SpiroCpTy {
     Anchor = b'a',
     Handle = b'h',
     #[default]
-    End = b'z',
     Open = b'{',
     EndOpen = b'}',
+    // NOTE: There should have been an extra instruction according to the
+    // original, but it has been removed in this port for being a sentinel,
+    // which is no longer relevant in Rust:
+    // End = b'z',
 }
 
 impl std::cmp::PartialEq<u8> for SpiroCpTy {

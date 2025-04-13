@@ -17,14 +17,6 @@ fn test() {
 }
 
 #[test]
-fn add_mat_line_no_index_out_of_bounds() {
-    let mut path = test_data!();
-    path.insert(path.len() - 2, SpiroCP { ty: End, ..path[0] });
-    let oplist = run_spiro(&mut path);
-    eprintln!("{oplist:?}");
-}
-
-#[test]
 fn compute_pderivs_no_index_out_of_bounds() {
     let mut path = vec![
         SpiroCP { x: 0., y: 0.5, ty: G4 },
@@ -46,15 +38,6 @@ fn add_mat_line_no_underflow() {
     Assert::new()
         .action_env(TRYCMD)
         .eq(format!("{oplist:#?}"), file!["data/broken_s.oplist"]);
-}
-
-#[test]
-fn add_mat_line_no_underflow_abrupt_end() {
-    let mut path = test_data!();
-    path.reverse();
-    path.insert(1, SpiroCP { ty: End, ..path[0] });
-    let oplist = run_spiro(&mut path);
-    eprintln!("{oplist:?}");
 }
 
 fn run_spiro(path: &mut [SpiroCP]) -> Vec<RoundedOperation> {
