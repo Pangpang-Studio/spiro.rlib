@@ -40,6 +40,34 @@ fn add_mat_line_no_underflow() {
         .eq(format!("{oplist:#?}"), file!["data/broken_s.oplist"]);
 }
 
+#[test]
+fn minuscule_o() {
+    let mut path = [
+        SpiroCP {
+            x: 0.065,
+            y: 0.33,
+            ty: Left,
+        },
+        SpiroCP {
+            x: 0.06,
+            y: 0.6,
+            ty: Right,
+        },
+        SpiroCP { x: 0.14, y: 0.72, ty: G4 },
+        SpiroCP { x: 0.25, y: 0.74, ty: G2 },
+        SpiroCP { x: 0.35, y: 0.72, ty: G4 },
+        SpiroCP { x: 0.4, y: 0.5, ty: Left },
+        SpiroCP { x: 0.4, y: 0.3, ty: Right },
+        SpiroCP { x: 0.3, y: 0.1, ty: G4 },
+        SpiroCP { x: 0.25, y: 0.15, ty: G2 },
+        SpiroCP { x: 0.14, y: 0.17, ty: G4 },
+    ];
+    let oplist = run_spiro(&mut path);
+    Assert::new()
+        .action_env(TRYCMD)
+        .eq(format!("{oplist:#?}"), file!["data/minuscule_o.oplist"]);
+}
+
 fn run_spiro(path: &mut [SpiroCP]) -> Vec<RoundedOperation> {
     // SAFETY: `transmute` is safe here because `RoundedOperation` is a
     // `repr(transparent)` newtype around `Operation`.
